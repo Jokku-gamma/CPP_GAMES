@@ -1,0 +1,26 @@
+For Checking the proper working of collaboration
+
+How to implement it ?
+
+git clone <our_repo_url>
+cd <our_repo_name>
+
+git checkout -b <your_unique_branch_name> origin/branch_joel
+
+make your changes
+
+git add .
+git commit -m "<Your-Message>"
+git push origin <your_unique_branch_name>
+
+
+and finally we merge them all to the branch main
+
+
+So to test it
+Make the value of x to 10 and push it to your branches
+
+
+<<<<x=5>>>>
+After you completed your task pls message me.
+
