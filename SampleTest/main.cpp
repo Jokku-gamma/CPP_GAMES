@@ -1,50 +1,67 @@
-#include <graphics.h>
-#include <conio.h>
+#include <iostream>
+#include <SDL2/SDL.h> 
 
-int main() {
-    int gd = DETECT, gm;
-    initgraph(&gd, &gm, "");
-    line(100, 100, 200, 200);
-    circle(300, 200, 50);
-    outtextxy(150, 250, "Hello, Graphics!");
-    getch(); 
-    closegraph(); 
+void logSDLError(std::ostream &os, const std::string &msg) {
+    os << msg << " error: " << SDL_GetError() << std::endl;
+}
+
+int main(int argc, char* argv[]) {
+    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+        logSDLError(std::cerr, "SDL_Init");
+        return 1;
+    }
+
+    SDL_Window *window = SDL_CreateWindow("Hello, SDL Graphics!",
+                                          SDL_WINDOWPOS_CENTERED,
+                                          SDL_WINDOWPOS_CENTERED,
+                                          640, 480,
+                                          SDL_WINDOW_SHOWN);
+    if (window == nullptr) {
+        logSDLError(std::cerr, "SDL_CreateWindow");
+        SDL_Quit();
+        return 1;
+    }
+
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (renderer == nullptr) {
+        logSDLError(std::cerr, "SDL_CreateRenderer");
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return 1;
+    }
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_RenderDrawLine(renderer, 100, 100, 200, 200);
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    int center_x = 300;
+    int center_y = 200;
+    int radius = 50;
+    for (int i = 0; i < 360; i++) {
+        double angle = i * M_PI / 180.0;
+        int x = center_x + (int)(radius * cos(angle));
+        int y = center_y + (int)(radius * sin(angle));
+        SDL_RenderDrawPoint(renderer, x, y);
+    }
+    std::cout << "Hello, Graphics! (See the window for drawing)" << std::endl;
+    SDL_RenderPresent(renderer);
+    bool quit = false;
+    SDL_Event e;
+    while (!quit) {
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) {
+                quit = true;
+            }
+            if (e.type == SDL_KEYDOWN) { 
+                quit = true;
+            }
+        }
+        SDL_Delay(10); 
+    }
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 
     return 0;
 }
 
-
-/*
-How to run this program
-1. install MinGW and Add to path
-2. Install WinBGIm graphics library
-3. We get these three files
-graphics.h
-winbgim.h
-libbgi.a
-
-b. Copy them:
-graphics.h and winbgim.h → Put into:
-
-C:\mingw\include
-
-libbgi.a → Put into:
-
-C:\mingw\lib
-
-4. In terminal compile using
-g++ main.cpp -o app -lbgi -lgdi32 -lcomdlg32 -luuid -loleaut32 -lole32
-5. Run the app using
-./app
-
-
-(Pls don't forget to install vscode and c++ extension in vscode)
-if any one has Mingw feel free to test
-i mean
-harsh
-nambu
-prince
-
-This is to test the working of our collaboration and initial milestone
-
-*/
