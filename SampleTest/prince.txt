@@ -21,7 +21,7 @@ So to test it
 Make the value of x to 10 and push it to your branches
 
 
-<<<<x=5>>>>
+<<<<x=10>>>>
 
 
 You need to edit all three files and push to your branch <your_unique_branch_name>
