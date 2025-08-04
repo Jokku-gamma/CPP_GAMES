@@ -9,7 +9,7 @@ int main() {
     std::srand(static_cast<unsigned>(std::time(nullptr)));
     
     // Create window
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Dodge the Asteroids!");
+    sf::RenderWindow window(sf::VideoMode(800u, 600u), "Dodge the Asteroids!");
     window.setFramerateLimit(60);
     
     // Load font for score and game over text
